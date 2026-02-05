@@ -1,0 +1,17 @@
+steps:
+  sync-upstream:
+    image: alpine/git
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - git config --global user.email "claas.stoertenbecker@gmail.com"
+      - git config --global user.name "clstb"
+      - git remote add upstream https://github.com/NixOS/nixpkgs.git || true
+      - git fetch upstream master
+      - git checkout master
+      - git rebase upstream/master
+      - git push https://$GITHUB_TOKEN@github.com/clstb/nixpkgs.git master
+    when:
+      event: cron
+      cron: nightly
