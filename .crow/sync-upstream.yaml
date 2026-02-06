@@ -1,3 +1,9 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      depth: 200
+
 steps:
   sync-upstream:
     image: alpine/git
@@ -8,10 +14,10 @@ steps:
       - git config --global user.email "claas.stoertenbecker@gmail.com"
       - git config --global user.name "clstb"
       - git remote add upstream https://github.com/NixOS/nixpkgs.git || true
-      - git fetch upstream master
+      - git fetch upstream master --no-tags --depth 2000
       - git checkout master
-      - git rebase upstream/master
-      - git push https://$GITHUB_TOKEN@github.com/clstb/nixpkgs.git master
+      - git rebase upstream/master || exit 1
+      - git push https://$GITHUB_TOKEN@github.com/clstb/nixpkgs.git master --force
     when:
       event: cron
       cron: nightly
