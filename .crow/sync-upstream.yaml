@@ -1,8 +1,9 @@
 clone:
   git:
-    image: woodpeckerci/plugin-git
+    image: codeberg.org/crow-plugins/clone
     settings:
       depth: 200
+      no_tags: true
 
 steps:
   sync-upstream:
@@ -13,8 +14,8 @@ steps:
     commands:
       - git config --global user.email "claas.stoertenbecker@gmail.com"
       - git config --global user.name "clstb"
-      - git remote add upstream https://github.com/NixOS/nixpkgs.git || true
-      - git fetch upstream master --no-tags --depth 2000
+      - git remote add upstream https://github.com/NixOS/nixpkgs.git
+      - git fetch upstream --no-tags --depth 200
       - git checkout master
       - git rebase upstream/master || exit 1
       - git push https://$GITHUB_TOKEN@github.com/clstb/nixpkgs.git master --force
